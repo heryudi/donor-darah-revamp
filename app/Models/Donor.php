@@ -21,6 +21,8 @@ class Donor extends Model
         'donor_card_number',
         'awards',
         'willing_to_fast',
+        'willing_to_receive_mail',
+        'willing_to_help_special_needs',
         'last_donor_date',
         'total_donations',
     ];
@@ -28,7 +30,9 @@ class Donor extends Model
     protected $casts = [
         'birth_date' => 'date',
         'last_donor_date' => 'date',
-        'willing_to_fast' => 'boolean',
+        'willing_to_receive_mail' => 'boolean',
+        'willing_to_help_special_needs' => 'boolean',
+        'awards' => 'array',
     ];
 
     public function queues()

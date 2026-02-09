@@ -36,6 +36,9 @@ class DonorController extends Controller
             'region' => 'nullable|string',
             'phone' => 'nullable|string',
             'occupation' => 'nullable|string',
+            'willing_to_fast' => 'boolean',
+            'willing_to_receive_mail' => 'boolean',
+            'willing_to_help_special_needs' => 'boolean',
         ]);
 
         $donor = \App\Models\Donor::create($validated);
@@ -62,8 +65,11 @@ class DonorController extends Controller
             'phone' => 'nullable|string',
             'occupation' => 'nullable|string',
             'donor_card_number' => 'nullable|string',
-            'awards' => 'nullable|string',
+            'awards' => 'nullable|array',
+            'awards.*' => 'string',
             'willing_to_fast' => 'boolean',
+            'willing_to_receive_mail' => 'boolean',
+            'willing_to_help_special_needs' => 'boolean',
             'last_donor_date' => 'nullable|date',
             'total_donations' => 'integer',
         ]);

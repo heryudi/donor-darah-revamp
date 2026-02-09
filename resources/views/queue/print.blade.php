@@ -61,7 +61,7 @@
     </table>
 
     <div style="margin-top: 10px;">
-        Penghargaan yang telah diterima <b>{{ $donor->awards }}x</b>
+        Penghargaan yang telah diterima <b>{{ !empty($donor->awards) ? implode(', ', $donor->awards) : '-' }}</b>
     </div>
     <div style="margin-top: 5px;">
         Bersediakah Saudara donor pada waktu bulan puasa? <b>{{ $donor->willing_to_fast ? 'YA' : 'TIDAK' }}</b>

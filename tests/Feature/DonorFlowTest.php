@@ -28,7 +28,7 @@ class DonorFlowTest extends TestCase
     {
         $response = $this->get('/donors?day=1&month=1&year=2000');
         $response->assertStatus(200);
-        $response->assertSee('Maaf, data tanggal lahir tidak ditemukan');
+        $response->assertSee('Maaf, data dengan tanggal lahir tersebut tidak ditemukan');
     }
 
     public function test_can_create_donor()

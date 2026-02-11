@@ -7,7 +7,7 @@ use App\Models\Donor;
 
 class Queue extends Model
 {
-    protected $fillable = ['donor_id'];
+    protected $fillable = ['donor_id', 'queue_number'];
 
     public function donor()
     {

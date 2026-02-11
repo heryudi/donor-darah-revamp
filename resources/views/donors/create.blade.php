@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-white shadow-xl rounded-2xl overflow-hidden mx-4 pb-8">
+<div class="bg-white shadow-xl rounded-2xl overflow-hidden mx-4 border border-gray-200">
     <div class="px-8 py-6 bg-red-600 border-b border-red-700">
         <h3 class="text-3xl font-extrabold text-white flex items-center">
             <svg class="h-10 w-10 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -11,9 +11,10 @@
         </h3>
     </div>
     
-    <div class="px-8 py-8">
-        <form action="{{ route('donors.store') }}" method="POST" class="space-y-8">
-            @csrf
+    <form action="{{ route('donors.store') }}" method="POST">
+        @csrf
+        
+        <div class="px-8 py-8 space-y-12">
             
             <!-- Personal Info Section -->
             <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
@@ -30,15 +31,15 @@
                         <label class="block text-xl font-bold text-gray-700 mb-2">Jenis Kelamin</label>
                         <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="gender" value="male" class="peer sr-only">
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-xl font-bold text-gray-700 peer-checked:text-red-700">Laki-laki</span>
+                                <input type="radio" name="gender" value="male" class="peer sr-only" {{ old('gender') == 'male' ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
+                                    <span class="text-xl font-bold text-gray-700 peer-checked:text-green-700">Laki-laki</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="gender" value="female" class="peer sr-only">
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-xl font-bold text-gray-700 peer-checked:text-red-700">Perempuan</span>
+                                <input type="radio" name="gender" value="female" class="peer sr-only" {{ old('gender') == 'female' ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
+                                    <span class="text-xl font-bold text-gray-700 peer-checked:text-green-700">Perempuan</span>
                                 </div>
                             </label>
                         </div>
@@ -47,7 +48,7 @@
                     <!-- Birth Date -->
                     <div>
                         <label for="birth_date" class="block text-xl font-bold text-gray-700 mb-2">Tanggal Lahir</label>
-                        <input type="date" name="birth_date" id="birth_date" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" required>
+                        <input type="date" name="birth_date" id="birth_date" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" required value="{{ old('birth_date', request('year') && request('month') && request('day') ? request('year') . '-' . str_pad(request('month'), 2, '0', STR_PAD_LEFT) . '-' . str_pad(request('day'), 2, '0', STR_PAD_LEFT) : '') }}">
                     </div>
 
                     <!-- Phone -->
@@ -121,15 +122,15 @@
                         <label class="block text-xl font-bold text-gray-700 mb-4">Bersediakah saudara donor pada waktu bulan puasa?</label>
                          <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_fast" value="1" class="peer sr-only">
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">YA</span>
+                                <input type="radio" name="willing_to_fast" value="1" class="peer sr-only" {{ old('willing_to_fast') == '1' ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-green-700">YA</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_fast" value="0" class="peer sr-only" checked>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-blue-700">TIDAK</span>
+                                <input type="radio" name="willing_to_fast" value="0" class="peer sr-only" {{ old('willing_to_fast') === '0' || !old('willing_to_fast') ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">TIDAK</span>
                                 </div>
                             </label>
                         </div>
@@ -140,15 +141,15 @@
                         <label class="block text-xl font-bold text-gray-700 mb-4">Bersedia dikirim surat?</label>
                          <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_receive_mail" value="1" class="peer sr-only">
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">YA</span>
+                                <input type="radio" name="willing_to_receive_mail" value="1" class="peer sr-only" {{ old('willing_to_receive_mail') == '1' ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-green-700">YA</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_receive_mail" value="0" class="peer sr-only" checked>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-blue-700">TIDAK</span>
+                                <input type="radio" name="willing_to_receive_mail" value="0" class="peer sr-only" {{ old('willing_to_receive_mail') === '0' || !old('willing_to_receive_mail') ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">TIDAK</span>
                                 </div>
                             </label>
                         </div>
@@ -159,15 +160,15 @@
                         <label class="block text-xl font-bold text-gray-700 mb-4">Bersediakah saudara donor saat dibutuhkan untuk keperluan tertentu (diluar donor rutin)?</label>
                          <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_help_special_needs" value="1" class="peer sr-only">
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">YA</span>
+                                <input type="radio" name="willing_to_help_special_needs" value="1" class="peer sr-only" {{ old('willing_to_help_special_needs') == '1' ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-green-700">YA</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_help_special_needs" value="0" class="peer sr-only" checked>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-blue-700">TIDAK</span>
+                                <input type="radio" name="willing_to_help_special_needs" value="0" class="peer sr-only" {{ old('willing_to_help_special_needs') === '0' || !old('willing_to_help_special_needs') ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">TIDAK</span>
                                 </div>
                             </label>
                         </div>
@@ -175,8 +176,10 @@
                 </div>
             </div>
 
-            <!-- Actions -->
-            <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+        </div>
+
+        <!-- Actions Footer -->
+        <div class="px-8 py-6 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
                 <a href="{{ route('donors.index') }}" class="inline-flex items-center px-8 py-4 border-2 border-gray-300 shadow-sm text-xl font-bold rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-red-500 transition">
                     <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     Batal
@@ -185,7 +188,7 @@
                     SIMPAN DATA 💾
                 </button>
             </div>
-        </form>
-    </div>
+
+    </form>
 </div>
 @endsection

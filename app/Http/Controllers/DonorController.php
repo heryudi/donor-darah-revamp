@@ -46,6 +46,31 @@ class DonorController extends Controller
         return redirect()->route('donors.edit', $donor)->with('success', 'Donor registered successfully.');
     }
 
+    public function verify(Request $request, \App\Models\Donor $donor)
+    {
+        $request->validate([
+            'phone_verify' => 'required|digits:4'
+        ]);
+
+        // Check if donor has phone registered
+        if (empty($donor->phone)) {
+            return back()->withErrors([
+                'phone_verify' => 'Nomor HP tidak terdaftar. Silakan hubungi petugas.'
+            ])->withInput();
+        }
+
+        // Verify last 4 digits
+        $lastFour = substr($donor->phone, -4);
+        if ($request->phone_verify !== $lastFour) {
+            return back()->withErrors([
+                'phone_verify' => 'Nomor HP tidak sesuai. Silakan hubungi petugas.'
+            ])->withInput();
+        }
+
+        // Success: redirect to edit page
+        return redirect()->route('donors.edit', $donor);
+    }
+
     public function edit(\App\Models\Donor $donor)
     {
         return view('donors.edit', compact('donor'));
@@ -78,7 +103,11 @@ class DonorController extends Controller
 
         if ($request->has('queue')) {
             // Add to queue directly
-            $queue = \App\Models\Queue::create(['donor_id' => $donor->id]);
+            $nextQueue = \App\Models\Queue::whereDate('created_at', now()->today())->max('queue_number') + 1;
+            $queue = \App\Models\Queue::create([
+                'donor_id' => $donor->id,
+                'queue_number' => $nextQueue
+            ]);
             return redirect()->route('queues.print', $queue);
         }
 

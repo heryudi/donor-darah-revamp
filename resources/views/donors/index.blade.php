@@ -83,24 +83,86 @@
     </div>
     <div class="divide-y divide-gray-200">
         @if(count($donors) > 0)
-        <ul class="divide-y divide-gray-200">
-            @foreach($donors as $donor)
-            <li class="p-8 hover:bg-red-50 transition duration-150 ease-in-out">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-3xl font-bold text-red-700 truncate">{{ $donor->name }}</p>
-                        <p class="text-xl text-gray-600 mt-2">{{ $donor->address }}</p>
-                        <p class="text-lg text-gray-500 mt-1">Lahir: {{ $donor->birth_date->format('d F Y') }}</p>
+        <div class="p-8">
+            <!-- Success Message -->
+            <div class="flex items-center justify-center mb-6">
+                <svg class="h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 text-center mb-2">
+                {{ count($donors) }} {{ count($donors) == 1 ? 'data pendonor' : 'data pendonor' }} ditemukan
+            </h3>
+
+            <!-- Privacy Notice -->
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8 rounded-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
                     </div>
-                    <div>
-                        <a href="{{ route('donors.edit', $donor) }}" class="inline-flex items-center px-8 py-4 border border-transparent text-xl font-bold rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-500 shadow-lg transform active:scale-95 transition">
-                            PILIH ✅
-                        </a>
+                    <div class="ml-4">
+                        <p class="text-xl font-medium text-blue-800">
+                            Untuk melindungi privasi Anda, silakan verifikasi identitas
+                        </p>
+                        <p class="text-lg text-blue-700 mt-1">
+                            Masukkan 4 angka terakhir nomor HP Anda yang terdaftar
+                        </p>
                     </div>
                 </div>
-            </li>
-            @endforeach
-        </ul>
+            </div>
+
+            <!-- Verification Forms -->
+            <div class="space-y-6">
+                @foreach($donors as $index => $donor)
+                <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-6">
+                    <div class="mb-4">
+                        <h4 class="text-xl font-bold text-gray-900">Pendonor #{{ $index + 1 }}</h4>
+                        <p class="text-lg text-gray-600 mt-1">Lahir: {{ $donor->birth_date->format('d F Y') }}</p>
+                        @if($donor->donor_card_number)
+                        <p class="text-lg text-gray-600">No. Kartu Donor: {{ $donor->donor_card_number }}</p>
+                        @endif
+                    </div>
+
+                    <form action="{{ route('donors.verify', $donor) }}" method="POST" class="space-y-4">
+                        @csrf
+                        <div>
+                            <label for="phone_verify_{{ $donor->id }}" class="block text-lg font-medium text-gray-700 mb-2">
+                                4 Angka Terakhir No. HP Anda
+                            </label>
+                            <input
+                                type="text"
+                                id="phone_verify_{{ $donor->id }}"
+                                name="phone_verify"
+                                maxlength="4"
+                                pattern="[0-9]{4}"
+                                inputmode="numeric"
+                                class="block w-full text-2xl py-4 px-6 border-2 @error('phone_verify') border-red-500 @else border-gray-300 @enderror bg-white rounded-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500"
+                                placeholder="****"
+                                value="{{ old('phone_verify') }}"
+                                required
+                            >
+                            @error('phone_verify')
+                            <p class="mt-2 text-lg text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="w-full flex justify-center items-center py-4 px-6 border border-transparent shadow-lg text-xl font-bold rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                            🔐 VERIFIKASI & LANJUTKAN
+                        </button>
+                    </form>
+                </div>
+                @endforeach
+            </div>
+
+            <!-- Back Link -->
+            <div class="mt-8 text-center">
+                <a href="{{ route('donors.index') }}" class="text-xl text-red-600 hover:text-red-800 font-medium">
+                    ← Kembali ke Pencarian
+                </a>
+            </div>
+        </div>
         @else
         <div class="p-12 text-center">
             <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -109,7 +171,7 @@
             <h3 class="mt-4 text-2xl font-medium text-gray-900">Data Tidak Ditemukan</h3>
             <p class="mt-2 text-xl text-gray-500">Maaf, data dengan tanggal lahir tersebut tidak ditemukan.</p>
             <div class="mt-8">
-                 <a href="{{ route('donors.create') }}" class="inline-flex items-center justify-center px-8 py-6 border border-transparent text-2xl font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-blue-500 shadow-xl w-full md:w-auto">
+                <a href="{{ route('donors.create', ['day' => request('day'), 'month' => request('month'), 'year' => request('year')]) }}" class="inline-flex items-center justify-center px-8 py-6 border border-transparent text-2xl font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-blue-500 shadow-xl w-full md:w-auto">
                     📝 DAFTAR BARU
                 </a>
             </div>

@@ -9,7 +9,7 @@
             </svg>
             Edit Data & Ambil Antrian
         </h3>
-        <span class="bg-red-800 text-white px-4 py-1 rounded-full text-lg font-mono">{{ $donor->donor_card_number ?? 'NO CARD' }}</span>
+        <span class="bg-red-800 text-white px-4 py-1 rounded-full text-lg font-mono">{{ $donor->donor_card_number ?? 'TANPA KARTU' }}</span>
     </div>
 
     <div class="px-8 py-8">
@@ -40,22 +40,23 @@
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="col-span-1 md:col-span-2">
                         <label for="name" class="block text-xl font-bold text-gray-700 mb-2">Nama Lengkap</label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $donor->name) }}" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" required>
+                        <input type="text" name="name" id="name" value="{{ old('name', $donor->name) }}" class="block w-full text-2xl py-3 px-4 border-2 @error('name') border-red-500 @else border-gray-300 @enderror rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" required>
+                        @error('name') <p class="mt-2 text-lg text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label class="block text-xl font-bold text-gray-700 mb-2">Jenis Kelamin</label>
                         <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="gender" value="male" class="peer sr-only" {{ $donor->gender == 'male' ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-xl font-bold text-gray-700 peer-checked:text-red-700">Laki-laki</span>
+                                <input type="radio" name="gender" value="male" class="peer sr-only" {{ old('gender', $donor->gender) == 'male' ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-xl font-bold">Laki-laki</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="gender" value="female" class="peer sr-only" {{ $donor->gender == 'female' ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-xl font-bold text-gray-700 peer-checked:text-red-700">Perempuan</span>
+                                <input type="radio" name="gender" value="female" class="peer sr-only" {{ old('gender', $donor->gender) == 'female' ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-xl font-bold">Perempuan</span>
                                 </div>
                             </label>
                         </div>
@@ -74,7 +75,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                      <div class="col-span-1 md:col-span-2">
                         <label for="address" class="block text-xl font-bold text-gray-700 mb-2">Alamat Lengkap</label>
-                        <textarea id="address" name="address" rows="2" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">{{ old('address', $donor->address) }}</textarea>
+                        <textarea id="address" name="address" rows="2" class="block w-full text-2xl py-3 px-4 border-2 @error('address') border-red-500 @else border-gray-300 @enderror rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">{{ old('address', $donor->address) }}</textarea>
+                        @error('address') <p class="mt-2 text-lg text-red-600">{{ $message }}</p> @enderror
                     </div>
                      <div>
                         <label for="house_number" class="block text-xl font-bold text-gray-700 mb-2">Nomor</label>
@@ -108,15 +110,15 @@
                         <label class="block text-xl font-bold text-gray-700 mb-4">Bersediakah saudara donor pada waktu bulan puasa?</label>
                          <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_fast" value="1" class="peer sr-only" {{ $donor->willing_to_fast ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">YA</span>
+                                <input type="radio" name="willing_to_fast" value="1" class="peer sr-only" {{ old('willing_to_fast', $donor->willing_to_fast) ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">YA</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_fast" value="0" class="peer sr-only" {{ !$donor->willing_to_fast ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-blue-700">TIDAK</span>
+                                <input type="radio" name="willing_to_fast" value="0" class="peer sr-only" {{ !old('willing_to_fast', $donor->willing_to_fast) ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">TIDAK</span>
                                 </div>
                             </label>
                         </div>
@@ -127,15 +129,15 @@
                         <label class="block text-xl font-bold text-gray-700 mb-4">Bersedia dikirim surat?</label>
                          <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_receive_mail" value="1" class="peer sr-only" {{ $donor->willing_to_receive_mail ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">YA</span>
+                                <input type="radio" name="willing_to_receive_mail" value="1" class="peer sr-only" {{ old('willing_to_receive_mail', $donor->willing_to_receive_mail) ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">YA</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_receive_mail" value="0" class="peer sr-only" {{ !$donor->willing_to_receive_mail ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-blue-700">TIDAK</span>
+                                <input type="radio" name="willing_to_receive_mail" value="0" class="peer sr-only" {{ !old('willing_to_receive_mail', $donor->willing_to_receive_mail) ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">TIDAK</span>
                                 </div>
                             </label>
                         </div>
@@ -146,15 +148,15 @@
                         <label class="block text-xl font-bold text-gray-700 mb-4">Bersediakah saudara donor saat dibutuhkan untuk keperluan tertentu (diluar donor rutin)?</label>
                          <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_help_special_needs" value="1" class="peer sr-only" {{ $donor->willing_to_help_special_needs ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">YA</span>
+                                <input type="radio" name="willing_to_help_special_needs" value="1" class="peer sr-only" {{ old('willing_to_help_special_needs', $donor->willing_to_help_special_needs) ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">YA</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
-                                <input type="radio" name="willing_to_help_special_needs" value="0" class="peer sr-only" {{ !$donor->willing_to_help_special_needs ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-blue-600 peer-checked:bg-blue-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-blue-700">TIDAK</span>
+                                <input type="radio" name="willing_to_help_special_needs" value="0" class="peer sr-only" {{ !old('willing_to_help_special_needs', $donor->willing_to_help_special_needs) ? 'checked' : '' }}>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">TIDAK</span>
                                 </div>
                             </label>
                         </div>
@@ -162,12 +164,12 @@
 
                      <div>
                         <label class="block text-xl font-bold text-gray-700 mb-2">Penghargaan</label>
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="grid grid-cols-5 gap-4">
                             @foreach(['10', '25', '50', '75', '100'] as $award)
                             <label class="relative cursor-pointer">
                                 <input type="checkbox" name="awards[]" value="{{ $award }}" class="peer sr-only" {{ in_array($award, $donor->awards ?? []) ? 'checked' : '' }}>
-                                <div class="px-4 py-3 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-xl font-bold text-gray-700 peer-checked:text-red-700">{{ $award }}x</span>
+                                <div class="px-4 py-3 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-xl font-bold">{{ $award }}x</span>
                                 </div>
                             </label>
                             @endforeach
@@ -214,8 +216,8 @@
                         Simpan Perubahan
                     </button>
                     
-                    <button type="submit" name="queue" value="1" class="w-full md:w-auto inline-flex justify-center items-center px-10 py-4 border border-transparent shadow-lg text-2xl font-extrabold rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-500 transition transform active:scale-95 animate-pulse">
-                        AMBIL ANTR & CETAK 🖨️
+                    <button type="submit" name="queue" value="1" class="w-full md:w-auto inline-flex justify-center items-center px-10 py-4 border border-transparent shadow-lg text-2xl font-extrabold rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-500 transition transform active:scale-95">
+                        AMBIL ANTRIAN & CETAK 🖨️
                     </button>
                 </div>
             </div>

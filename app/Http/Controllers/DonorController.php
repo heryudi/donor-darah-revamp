@@ -48,7 +48,9 @@ class DonorController extends Controller
 
     public function verify(Request $request, \App\Models\Donor $donor)
     {
-        $request->validate([
+        $errorBag = 'verify_' . $donor->id;
+
+        $request->validateWithBag($errorBag, [
             'phone_verify' => 'required|digits:4'
         ]);
 
@@ -56,7 +58,7 @@ class DonorController extends Controller
         if (empty($donor->phone)) {
             return back()->withErrors([
                 'phone_verify' => 'Nomor HP tidak terdaftar. Silakan hubungi petugas.'
-            ])->withInput();
+            ], $errorBag)->withInput();
         }
 
         // Verify last 4 digits
@@ -64,7 +66,7 @@ class DonorController extends Controller
         if ($request->phone_verify !== $lastFour) {
             return back()->withErrors([
                 'phone_verify' => 'Nomor HP tidak sesuai. Silakan hubungi petugas.'
-            ])->withInput();
+            ], $errorBag)->withInput();
         }
 
         // Success: redirect to edit page

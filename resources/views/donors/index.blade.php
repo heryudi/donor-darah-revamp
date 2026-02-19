@@ -36,9 +36,12 @@
                     <div class="relative">
                         <select id="month" name="month" class="block w-full text-2xl py-4 px-6 border-2 border-gray-300 bg-white rounded-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500 appearance-none">
                              <option value="">Pilih Bulan</option>
+                            @php
+                                $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                            @endphp
                             @for ($i = 1; $i <= 12; $i++)
                                 <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
-                                    {{ DateTime::createFromFormat('!m', $i)->format('F') }}
+                                    {{ $bulan[$i - 1] }}
                                 </option>
                             @endfor
                         </select>
@@ -91,7 +94,7 @@
                 </svg>
             </div>
             <h3 class="text-2xl font-bold text-gray-900 text-center mb-2">
-                {{ count($donors) }} {{ count($donors) == 1 ? 'data pendonor' : 'data pendonor' }} ditemukan
+                {{ count($donors) }} data pendonor ditemukan
             </h3>
 
             <!-- Privacy Notice -->
@@ -138,14 +141,14 @@
                                 maxlength="4"
                                 pattern="[0-9]{4}"
                                 inputmode="numeric"
-                                class="block w-full text-2xl py-4 px-6 border-2 @error('phone_verify') border-red-500 @else border-gray-300 @enderror bg-white rounded-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500"
+                                class="block w-full text-2xl py-4 px-6 border-2 @if($errors->getBag('verify_' . $donor->id)->has('phone_verify')) border-red-500 @else border-gray-300 @endif bg-white rounded-xl shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500"
                                 placeholder="****"
                                 value="{{ old('phone_verify') }}"
                                 required
                             >
-                            @error('phone_verify')
-                            <p class="mt-2 text-lg text-red-600">{{ $message }}</p>
-                            @enderror
+                            @if($errors->getBag('verify_' . $donor->id)->has('phone_verify'))
+                            <p class="mt-2 text-lg text-red-600">{{ $errors->getBag('verify_' . $donor->id)->first('phone_verify') }}</p>
+                            @endif
                         </div>
 
                         <button type="submit" class="w-full flex justify-center items-center py-4 px-6 border border-transparent shadow-lg text-xl font-bold rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">

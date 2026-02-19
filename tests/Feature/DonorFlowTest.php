@@ -65,8 +65,8 @@ class DonorFlowTest extends TestCase
 
         $response = $this->get('/donors?day=5&month=5&year=1995');
         $response->assertStatus(200);
-        $response->assertSee('Jane Doe');
-        $response->assertDontSee('Maaf, data tanggal lahir tidak ditemukan');
+        $response->assertSee('1 data pendonor ditemukan');
+        $response->assertDontSee('Maaf, data dengan tanggal lahir tersebut tidak ditemukan');
     }
 
     public function test_can_queue_donor()

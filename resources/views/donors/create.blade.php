@@ -23,23 +23,25 @@
                     <!-- Name -->
                     <div class="col-span-1 md:col-span-2">
                         <label for="name" class="block text-xl font-bold text-gray-700 mb-2">Nama Lengkap</label>
-                        <input type="text" name="name" id="name" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" required>
+                        <input type="text" name="name" id="name" value="{{ old('name') }}" class="block w-full text-2xl py-3 px-4 border-2 @error('name') border-red-500 @else border-gray-300 @enderror rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" required>
+                        @error('name') <p class="mt-2 text-lg text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Gender -->
                     <div>
                         <label class="block text-xl font-bold text-gray-700 mb-2">Jenis Kelamin</label>
+                        @error('gender') <p class="mb-2 text-lg text-red-600">{{ $message }}</p> @enderror
                         <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
                                 <input type="radio" name="gender" value="male" class="peer sr-only" {{ old('gender') == 'male' ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-xl font-bold text-gray-700 peer-checked:text-green-700">Laki-laki</span>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-xl font-bold">Laki-laki</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
                                 <input type="radio" name="gender" value="female" class="peer sr-only" {{ old('gender') == 'female' ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-xl font-bold text-gray-700 peer-checked:text-green-700">Perempuan</span>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-xl font-bold">Perempuan</span>
                                 </div>
                             </label>
                         </div>
@@ -48,13 +50,14 @@
                     <!-- Birth Date -->
                     <div>
                         <label for="birth_date" class="block text-xl font-bold text-gray-700 mb-2">Tanggal Lahir</label>
-                        <input type="date" name="birth_date" id="birth_date" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" required value="{{ old('birth_date', request('year') && request('month') && request('day') ? request('year') . '-' . str_pad(request('month'), 2, '0', STR_PAD_LEFT) . '-' . str_pad(request('day'), 2, '0', STR_PAD_LEFT) : '') }}">
+                        <input type="date" name="birth_date" id="birth_date" class="block w-full text-2xl py-3 px-4 border-2 @error('birth_date') border-red-500 @else border-gray-300 @enderror rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" required value="{{ old('birth_date', request('year') && request('month') && request('day') ? request('year') . '-' . str_pad(request('month'), 2, '0', STR_PAD_LEFT) . '-' . str_pad(request('day'), 2, '0', STR_PAD_LEFT) : '') }}">
+                        @error('birth_date') <p class="mt-2 text-lg text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Phone -->
                     <div>
                         <label for="phone" class="block text-xl font-bold text-gray-700 mb-2">Telepon / HP</label>
-                        <input type="tel" name="phone" id="phone" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
+                        <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
                     </div>
                 </div>
             </div>
@@ -66,30 +69,31 @@
                     <!-- Address -->
                     <div class="col-span-1 md:col-span-2">
                         <label for="address" class="block text-xl font-bold text-gray-700 mb-2">Alamat Jalan</label>
-                        <textarea id="address" name="address" rows="2" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500"></textarea>
+                        <textarea id="address" name="address" rows="2" class="block w-full text-2xl py-3 px-4 border-2 @error('address') border-red-500 @else border-gray-300 @enderror rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">{{ old('address') }}</textarea>
+                        @error('address') <p class="mt-2 text-lg text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <!-- Details -->
                     <div>
                         <label for="house_number" class="block text-xl font-bold text-gray-700 mb-2">Nomor Rumah</label>
-                        <input type="text" name="house_number" id="house_number" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
+                        <input type="text" name="house_number" id="house_number" value="{{ old('house_number') }}" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
                     </div>
                     <div>
                         <label for="rt_rw" class="block text-xl font-bold text-gray-700 mb-2">RT / RW</label>
-                        <input type="text" name="rt_rw" id="rt_rw" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
+                        <input type="text" name="rt_rw" id="rt_rw" value="{{ old('rt_rw') }}" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
                     </div>
 
                     <div>
                         <label for="village" class="block text-xl font-bold text-gray-700 mb-2">Kelurahan</label>
-                        <input type="text" name="village" id="village" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
+                        <input type="text" name="village" id="village" value="{{ old('village') }}" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
                     </div>
                     <div>
                         <label for="district" class="block text-xl font-bold text-gray-700 mb-2">Kecamatan</label>
-                        <input type="text" name="district" id="district" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
+                        <input type="text" name="district" id="district" value="{{ old('district') }}" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500">
                     </div>
                     <div>
                         <label for="region" class="block text-xl font-bold text-gray-700 mb-2">Wilayah / Kota</label>
-                        <input type="text" name="region" id="region" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" value="Bandung">
+                        <input type="text" name="region" id="region" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500" value="{{ old('region', 'Bandung') }}">
                     </div>
 
                     <!-- Occupation -->
@@ -97,19 +101,18 @@
                         <label for="occupation" class="block text-xl font-bold text-gray-700 mb-2">Pekerjaan</label>
                         <div class="relative">
                             <select id="occupation" name="occupation" class="block w-full text-2xl py-3 px-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-4 focus:ring-red-500 focus:border-red-500 appearance-none">
-                                <option value="TNI/POLRI">TNI/POLRI</option>
-                                <option value="PEGAWAI NEGERI/SWASTA">Pegawai Negeri/Swasta</option>
-                                <option value="MAHASISWA/PELAJAR">Mahasiswa/Pelajar</option>
-                                <option value="PETANI/BURUH">Petani/Buruh</option>
-                                <option value="WIRASWASTA">Wiraswasta</option>
-                                <option value="LAIN-LAIN">Lain-lain</option>
+                                <option value="TNI/POLRI" {{ old('occupation') == 'TNI/POLRI' ? 'selected' : '' }}>TNI/POLRI</option>
+                                <option value="PEGAWAI NEGERI/SWASTA" {{ old('occupation') == 'PEGAWAI NEGERI/SWASTA' ? 'selected' : '' }}>Pegawai Negeri/Swasta</option>
+                                <option value="MAHASISWA/PELAJAR" {{ old('occupation') == 'MAHASISWA/PELAJAR' ? 'selected' : '' }}>Mahasiswa/Pelajar</option>
+                                <option value="PETANI/BURUH" {{ old('occupation') == 'PETANI/BURUH' ? 'selected' : '' }}>Petani/Buruh</option>
+                                <option value="WIRASWASTA" {{ old('occupation') == 'WIRASWASTA' ? 'selected' : '' }}>Wiraswasta</option>
+                                <option value="LAIN-LAIN" {{ old('occupation') == 'LAIN-LAIN' ? 'selected' : '' }}>Lain-lain</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700">
                                 <svg class="fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                             </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
 
@@ -123,14 +126,14 @@
                          <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
                                 <input type="radio" name="willing_to_fast" value="1" class="peer sr-only" {{ old('willing_to_fast') == '1' ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-green-700">YA</span>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">YA</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
                                 <input type="radio" name="willing_to_fast" value="0" class="peer sr-only" {{ old('willing_to_fast') === '0' || !old('willing_to_fast') ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">TIDAK</span>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">TIDAK</span>
                                 </div>
                             </label>
                         </div>
@@ -142,14 +145,14 @@
                          <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
                                 <input type="radio" name="willing_to_receive_mail" value="1" class="peer sr-only" {{ old('willing_to_receive_mail') == '1' ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-green-700">YA</span>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">YA</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
                                 <input type="radio" name="willing_to_receive_mail" value="0" class="peer sr-only" {{ old('willing_to_receive_mail') === '0' || !old('willing_to_receive_mail') ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">TIDAK</span>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">TIDAK</span>
                                 </div>
                             </label>
                         </div>
@@ -161,14 +164,14 @@
                          <div class="flex space-x-4">
                             <label class="flex-1 relative cursor-pointer">
                                 <input type="radio" name="willing_to_help_special_needs" value="1" class="peer sr-only" {{ old('willing_to_help_special_needs') == '1' ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-green-700">YA</span>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">YA</span>
                                 </div>
                             </label>
                             <label class="flex-1 relative cursor-pointer">
                                 <input type="radio" name="willing_to_help_special_needs" value="0" class="peer sr-only" {{ old('willing_to_help_special_needs') === '0' || !old('willing_to_help_special_needs') ? 'checked' : '' }}>
-                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 peer-checked:border-red-600 peer-checked:bg-red-50 hover:bg-gray-100 transition text-center">
-                                    <span class="text-2xl font-bold text-gray-700 peer-checked:text-red-700">TIDAK</span>
+                                <div class="px-6 py-4 rounded-lg border-2 border-gray-300 text-gray-700 peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700 hover:bg-gray-100 transition text-center">
+                                    <span class="text-2xl font-bold">TIDAK</span>
                                 </div>
                             </label>
                         </div>

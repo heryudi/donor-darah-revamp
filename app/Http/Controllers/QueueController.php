@@ -22,4 +22,5 @@ class QueueController extends Controller
         $donor = $queue->donor;
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('queue.print', compact('queue', 'donor'));
         return $pdf->stream('queue-' . $queue->id . '.pdf');
-    }}
+    }
+}

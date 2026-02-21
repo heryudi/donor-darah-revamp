@@ -121,14 +121,37 @@
                 @foreach($donors as $index => $donor)
                 <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-6">
                     <div class="mb-4">
-                        <h4 class="text-xl font-bold text-gray-900">Pendonor #{{ $index + 1 }}</h4>
-                        <p class="text-lg text-gray-600 mt-1">Lahir: {{ $donor->birth_date->format('d F Y') }}</p>
-                        @if($donor->donor_card_number)
-                        <p class="text-lg text-gray-600">No. Kartu Donor: {{ $donor->donor_card_number }}</p>
-                        @endif
+                        @php
+                            $nameParts = explode(' ', trim($donor->name));
+                            $maskedNameParts = [];
+                            foreach ($nameParts as $part) {
+                                $len = strlen($part);
+                                if ($len <= 2) {
+                                    $expose = 1;
+                                } elseif ($len <= 4) {
+                                    $expose = 2;
+                                } else {
+                                    $expose = 3;
+                                }
+                                $maskedNameParts[] = substr($part, 0, $expose) . str_repeat('*', max(0, $len - $expose));
+                            }
+                            $maskedName = implode(' ', $maskedNameParts);
+                        @endphp
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-900">{{ $maskedName }}</h4>
+                                <p class="text-lg text-gray-600 mt-1">Lahir: {{ $donor->birth_date->format('d F Y') }}</p>
+                                @if($donor->donor_card_number)
+                                <p class="text-lg text-gray-600">No. Kartu Donor: {{ $donor->donor_card_number }}</p>
+                                @endif
+                            </div>
+                            <button type="button" id="btn_select_{{ $donor->id }}" onclick="document.getElementById('verify_form_{{ $donor->id }}').style.display='block'; this.style.display='none';" class="px-6 py-3 border border-transparent shadow-sm text-lg font-bold rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Pilih
+                            </button>
+                        </div>
                     </div>
 
-                    <form action="{{ route('donors.verify', $donor) }}" method="POST" class="space-y-4">
+                    <form id="verify_form_{{ $donor->id }}" style="display: none;" action="{{ route('donors.verify', $donor) }}" method="POST" class="mt-6 space-y-4 border-t-2 border-gray-200 pt-6">
                         @csrf
                         <div>
                             <label for="phone_verify_{{ $donor->id }}" class="block text-lg font-medium text-gray-700 mb-2">
@@ -151,9 +174,14 @@
                             @endif
                         </div>
 
-                        <button type="submit" class="w-full flex justify-center items-center py-4 px-6 border border-transparent shadow-lg text-xl font-bold rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                            🔐 VERIFIKASI & LANJUTKAN
-                        </button>
+                        <div class="flex gap-4">
+                            <button type="button" onclick="document.getElementById('verify_form_{{ $donor->id }}').style.display='none'; document.getElementById('btn_select_{{ $donor->id }}').style.display='block';" class="w-1/3 flex justify-center items-center py-4 px-6 border border-gray-300 shadow-sm text-xl font-bold rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                Batal
+                            </button>
+                            <button type="submit" class="w-2/3 flex justify-center items-center py-4 px-6 border border-transparent shadow-lg text-xl font-bold rounded-xl text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                                🔐 VERIFIKASI
+                            </button>
+                        </div>
                     </form>
                 </div>
                 @endforeach

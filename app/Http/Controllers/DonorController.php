@@ -9,9 +9,19 @@ class DonorController extends Controller
     public function index(Request $request)
     {
         $donors = [];
-        if ($request->has('day') && $request->has('month') && $request->has('year')) {
-            $date = \Carbon\Carbon::createFromDate($request->year, $request->month, $request->day);
-            $donors = \App\Models\Donor::whereDate('birth_date', $date->format('Y-m-d'))->get();
+        if ($request->has(['day', 'month', 'year'])) {
+            $request->validate([
+                'day' => 'required|integer|between:1,31',
+                'month' => 'required|integer|between:1,12',
+                'year' => 'required|integer|min:1900|max:' . date('Y'),
+            ]);
+
+            if (checkdate($request->month, $request->day, $request->year)) {
+                $date = \Carbon\Carbon::createFromDate($request->year, $request->month, $request->day);
+                $donors = \App\Models\Donor::whereDate('birth_date', $date->format('Y-m-d'))->get();
+            } else {
+                return back()->withErrors(['date' => 'Tanggal tidak valid.'])->withInput();
+            }
         }
 
         return view('donors.index', compact('donors'));
@@ -24,6 +34,12 @@ class DonorController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge([
+            'willing_to_fast' => $request->boolean('willing_to_fast'),
+            'willing_to_receive_mail' => $request->boolean('willing_to_receive_mail'),
+            'willing_to_help_special_needs' => $request->boolean('willing_to_help_special_needs'),
+        ]);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'birth_date' => 'required|date',
@@ -80,6 +96,12 @@ class DonorController extends Controller
 
     public function update(Request $request, \App\Models\Donor $donor)
     {
+        $request->merge([
+            'willing_to_fast' => $request->boolean('willing_to_fast'),
+            'willing_to_receive_mail' => $request->boolean('willing_to_receive_mail'),
+            'willing_to_help_special_needs' => $request->boolean('willing_to_help_special_needs'),
+        ]);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:male,female',
@@ -105,11 +127,7 @@ class DonorController extends Controller
 
         if ($request->has('queue')) {
             // Add to queue directly
-            $nextQueue = \App\Models\Queue::whereDate('created_at', now()->today())->max('queue_number') + 1;
-            $queue = \App\Models\Queue::create([
-                'donor_id' => $donor->id,
-                'queue_number' => $nextQueue
-            ]);
+            $queue = \App\Models\Queue::generateForDonor($donor->id);
             return redirect()->route('queues.print', $queue);
         }
 

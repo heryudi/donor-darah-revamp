@@ -10,6 +10,12 @@ class DonorFlowTest extends TestCase
 {
     use \Illuminate\Foundation\Testing\RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    }
+
     /**
      * A basic feature test example.
      */
@@ -101,6 +107,10 @@ class DonorFlowTest extends TestCase
 
         $response = $this->get(route('queues.print', $queue));
         $response->assertStatus(200);
-        $response->assertHeader('content-type', 'application/pdf');
+        $response->assertSee('Mencetak Nomor Antrian');
+
+        $pdfResponse = $this->get(route('queues.print_pdf', $queue));
+        $pdfResponse->assertStatus(200);
+        $pdfResponse->assertHeader('content-type', 'application/pdf');
     }
 }

@@ -77,5 +77,11 @@
     <div class="queue-number">
         {{ $queue->queue_number }}
     </div>
+
+    <script type="text/javascript">
+        try {
+            this.print(true);
+        } catch(e) {}
+    </script>
 </body>
 </html>

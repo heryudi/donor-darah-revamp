@@ -7,3 +7,4 @@ Route::resource('donors', \App\Http\Controllers\DonorController::class);
 Route::post('/donors/{donor}/verify', [\App\Http\Controllers\DonorController::class, 'verify'])->name('donors.verify');
 Route::post('queues', [\App\Http\Controllers\QueueController::class, 'store'])->name('queues.store');
 Route::get('queues/{queue}/print', [\App\Http\Controllers\QueueController::class, 'print'])->name('queues.print');
+Route::get('queues/{queue}/pdf', [\App\Http\Controllers\QueueController::class, 'printPdf'])->name('queues.print_pdf');

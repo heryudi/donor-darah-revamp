@@ -12,12 +12,17 @@ class QueueController extends Controller
             'donor_id' => 'required|exists:donors,id',
         ]);
 
-        $queue = \App\Models\Queue::create($validated);
+        $queue = \App\Models\Queue::generateForDonor($validated['donor_id']);
 
         return redirect()->route('queues.print', $queue);
     }
 
     public function print(\App\Models\Queue $queue)
+    {
+        return view('queue.show', compact('queue'));
+    }
+
+    public function printPdf(\App\Models\Queue $queue)
     {
         $donor = $queue->donor;
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('queue.print', compact('queue', 'donor'));

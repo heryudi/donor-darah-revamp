@@ -12,21 +12,23 @@
 
 ## 3. Technology Stack
 *   **Backend**: Laravel 12.x (PHP 8.2+)
-*   **Frontend**: Blade Templates, Tailwind CSS (Mobile-first / Touch-friendly design)
+*   **Frontend**: Blade Templates, Tailwind CSS v4 (via @tailwindcss/postcss), Vite
 *   **Database**: SQLite (Development), MySQL (Production)
 *   **PDF Generation**: `barryvdh/laravel-dompdf` (For digital or printed queue tickets)
 
 ## 4. Functional Requirements
 
-### 4.1. Donor Identification (Search)
-*   **User Story**: As a donor, I want to identify myself using my birth date so I can access my record or register.
+### 4.1. Donor Identification (Search & Privacy)
+*   **User Story**: As a donor, I want to identify myself securely so I can access my record or register.
 *   **Flow**:
     1.  Donor approaches the kiosk/device.
     2.  Selects their **Birth Date** (Day, Month, Year).
     3.  Taps **"Cari / Masuk" (Search/Enter)**.
-    4.  **Result**:
-        *   **Found**: Shows a list of donors with that birth date (to handle duplicates). Donor selects their name.
-        *   **Not Found**: Displays a "Data Not Found" message with a prominent **"Daftar Baru" (Register New)** button.
+    4.  **Privacy Protection**: If multiple donors share the same birth date, the system displays a list with **Masked Names** (e.g., `Bud* San****`) to prevent data leaks to bystanders.
+    5.  **Verification**: After selecting a name, the donor must verify their identity by entering the **last 4 digits of their registered phone number**.
+    6.  **Result**:
+        *   **Verified**: Proceeds to Donor Confirmation screen.
+        *   **Not Found/Incorrect**: Displays a "Data Not Found" message with a prominent **"Daftar Baru" (Register New)** button.
 
 ### 4.2. New Donor Registration
 *   **User Story**: As a new donor, I want to register my details quickly so I can get a queue number.
@@ -46,19 +48,23 @@
 *   **User Story**: As a returning donor, I want to confirm my details and get a queue number.
 *   **Flow**:
     1.  After identifying (or registering), the donor sees their details.
-    2.  Donor can update changed information (e.g., new address or phone number).
-    3.  Donor answers mandatory health questions (e.g., "Are you fasting?").
+    2.  Donor can update changed information (Address, Phone, etc.).
+    3.  **Mandatory Health Toggles**:
+        *   "Are you willing to fast?" (Standard procedure confirmation).
+        *   "Willing to receive mail/notifications?"
+        *   "Willing to help in special needs cases?"
     4.  Donor taps **"Ambil Nomor Antrian" (Get Queue Number)**.
-    5.  System generates a queue entry.
+    5.  **Concurrency Safety**: System uses database locking (`lockForUpdate`) to generate an atomic, non-duplicate queue number.
 
-### 4.4. Queue Ticket (Output)
+### 4.4. Queue Ticket & Automation
 *   **User Story**: As a donor, I want to see my queue number so I know when my turn is.
-*   **Output**: A digital screen (and optional PDF printout) showing:
+*   **Output**: A digital screen showing:
     *   **Queue Number (Big & Bold)**
-    *   Donor Name
+    *   Donor Name (Masked for privacy)
     *   Date & Time
-    *   Estimated waiting time (Optional future feature)
-*   **Action**: Screen auto-refreshes or redirects back to Home after a timeout for the next user.
+*   **Kiosk Automation**:
+    *   **Auto-Print**: The ticket screen includes an embedded PDF script (`this.print(true)`) to automatically trigger the browser's print dialog for a physical slip.
+    *   **Auto-Home**: The interface uses `setTimeout` redirects to automatically return to the Home screen after 15-30 seconds, clearing the session for the next donor.
 
 ## 5. UI/UX Guidelines (Kiosk specific)
 *   **Large Buttons**: Targets should be easy to tap on touchscreens.
@@ -75,10 +81,19 @@
 | `name` | String | Donor Name |
 | `birth_date` | Date | Birth Date |
 | `gender` | Enum | 'male', 'female' |
-| `address` | Text | Full address |
+| `address` | String | Main street address |
+| `house_number` | String | |
+| `rt_rw` | String | RT/RW info |
+| `village` | String | Kelurahan/Desa |
+| `district` | String | Kecamatan |
+| `region` | String | Kota/Kabupaten |
 | `phone` | String | Contact number |
 | `occupation` | String | Job title |
 | `donor_card_number` | String | Legacy card number |
+| `awards` | String | Milestone awards (10x, 25x, etc) |
+| `willing_to_fast` | Boolean | |
+| `willing_to_receive_mail` | Boolean | |
+| `willing_to_help_special_needs` | Boolean | |
 | `total_donations` | Integer | Count of donations |
 | `last_donor_date` | Date | Last donation |
 | `created_at` | Timestamp | |
@@ -87,8 +102,9 @@
 ### `queues` Table
 | Column | Type | Description |
 | :--- | :--- | :--- |
-| `id` | BigInt (PK) | Queue Number |
+| `id` | BigInt (PK) | Unique ID |
 | `donor_id` | BigInt (FK) | Foreign Key to `donors` |
+| `queue_number` | Integer | Atomic incrementing number |
 | `created_at` | Timestamp | Queue time |
 | `updated_at` | Timestamp | |
 

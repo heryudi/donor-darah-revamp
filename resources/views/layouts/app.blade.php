@@ -30,7 +30,7 @@
                     <h1 class="text-4xl font-extrabold tracking-tight">
                         Donor Darah
                     </h1>
-                    <p class="text-lg opacity-90">Unit Donor Darah Bengkel Hangtuah</p>
+                    <p class="text-lg opacity-90">Bengkel Hangtuah</p>
                 </div>
                 <!-- Navigation -->
                 <nav>
@@ -45,7 +45,7 @@
 
         <footer class="bg-white border-t py-8">
             <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-lg">
-                Sistem Informasi Bengkel Hangtuah &copy; {{ date('Y') }}
+                Sistem Informasi Bengkel Hangtuah. Hak cipta dilindungi hati nurani &copy; {{ date('Y') }}
             </div>
         </footer>
     </div>
